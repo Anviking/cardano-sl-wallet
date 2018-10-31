@@ -61,7 +61,10 @@ jobs:
     script:
     - brew install rocksdb
     - stack clean
-    - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs
+    - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --coverage
+    after_script:
+    - travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v0.0.4.0/shc-linux-x64-8.0.1.tar.bz2 | tar -xj
+    - ./shc test wallet-new-specs
 
   - stage: hlint
     script:
