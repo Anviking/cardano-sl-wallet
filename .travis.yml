@@ -49,3 +49,12 @@ jobs:
   - stage: wallet-new-specs
     script:
     - stack --no-terminal test wallet-new-specs
+
+  - stage: hlint
+    script:
+      - curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s . --cpp-define=__GLASGOW_HASKELL__=800 --cpp-define=x86_64_HOST_ARCH=1 --cpp-define=mingw32_HOST_OS=1
+
+  - stage: weeder
+    script:
+      - curl -sL https://raw.github.com/ndmitchell/weeder/master/misc/travis.sh | sh -s .
+
