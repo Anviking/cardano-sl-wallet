@@ -8,7 +8,7 @@ spec :: Spec
 spec =
     describe "succ" $ do
         it "succ 0 == 1" $ do
-             succ 0 `shouldSatisfy` (== 1)
+             Lib.succ Lib.zero `shouldSatisfy` (== 1)
 
 
 
