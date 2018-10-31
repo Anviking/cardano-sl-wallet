@@ -32,6 +32,7 @@ stages:
 - extra-dependencies
 - cardano-sl
 - wallet-new-specs
+- hlint
 
 # Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
 jobs:
@@ -61,3 +62,7 @@ jobs:
     - brew install rocksdb
     - stack clean
     - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs
+
+  - stage: hlint
+    script:
+      - curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s . --cpp-define=__GLASGOW_HASKELL__=800 --cpp-define=x86_64_HOST_ARCH=1 --cpp-define=mingw32_HOST_OS=1
