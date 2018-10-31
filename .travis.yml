@@ -48,7 +48,7 @@ jobs:
 
   - stage: wallet-new-specs
     script:
-    - stack --no-terminal test wallet-new-specs
+    - stack --no-terminal test wallet-new-spec --coverage
 
   - stage: hlint
     script:
