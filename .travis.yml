@@ -29,6 +29,8 @@ stages:
 - snapshot
 - dependencies
 - wallet-new-specs
+- hlint
+- weeder
 
 # Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
 jobs:
