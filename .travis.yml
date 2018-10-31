@@ -13,6 +13,7 @@ cache:
   - $HOME/.stack
   - $HOME/.local
   - $HOME/.ghc
+  - /usr/local/Cellar
 
 # Only clone the repo's tip
 git:
@@ -39,10 +40,10 @@ jobs:
     - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
     - stack --no-terminal install cpphs
+    - brew install rocksdb
 
   - stage: dependencies
     script:
-    - brew install rocksdb
     - travis_wait 42 stack --no-terminal build --only-dependencies
 
   - stage: wallet-new-specs
