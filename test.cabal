@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8013b2c05784cd7baf3deefaa2519c5708c98a9a62fc5fc3ff8c608bab032a47
+-- hash: 9673ccfc4b2467b95aea75a27317de627130dcdd9b73a1e52ba7b40d62d471a5
 
 name:           test
 version:        0.1.0.0
@@ -57,5 +57,6 @@ test-suite test-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , hspec
     , test
   default-language: Haskell2010
