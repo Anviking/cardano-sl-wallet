@@ -38,7 +38,7 @@ jobs:
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
     - stack --no-terminal test --coverage
     after_script:
-    - cabal install codecov-haskell
+    - stack install codecov-haskell
     - codecov-haskell test-test
 
   - stage: hlint
