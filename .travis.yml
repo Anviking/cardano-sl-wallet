@@ -1,0 +1,47 @@
+# Use new container infrastructure to enable caching
+sudo: false
+
+# Use OSX to by-pass issue with CouchDB PGP Key on Linux
+os: osx
+
+# Generic language, we provide our custom builds
+language: generic
+
+# Caching so the next build will be fast too.
+cache:
+  directories:
+  - $HOME/.stack
+  - $HOME/.local
+  - $HOME/.ghc
+
+# Only clone the repo's tip
+git:
+  depth: false
+
+# Setup some global env variables
+env:
+  global:
+  - PATH=$HOME/.local/bin:$PATH
+
+# Define custom set of stages
+stages:
+- wallet-new-specs
+- hlint
+
+# Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
+jobs:
+  include:
+  - stage: wallet-new-specs
+    script:
+    - mkdir -p ~/.local/bin
+    - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
+    - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
+    - stack --no-terminal test --coverage
+    after_script:
+    - travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v0.0.4.0/shc-linux-x64-8.0.1.tar.bz2 | tar -xj
+    - ./shc test test-test
+
+  - stage: hlint
+    script:
+      - curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s . --cpp-define=__GLASGOW_HASKELL__=800 --cpp-define=x86_64_HOST_ARCH=1 --cpp-define=mingw32_HOST_OS=1
+
