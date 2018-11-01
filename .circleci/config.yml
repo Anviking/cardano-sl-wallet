@@ -6,6 +6,7 @@ jobs:
       - checkout
       - run: echo “Hello”
       - run: echo $COVERALLS_REPO_TOKEN
+      - run: sudo apt-get update && sudo apt-get install libcurl4-openssl-dev -y
       - run: wget https://github.com/commercialhaskell/stack/releases/download/v1.7.1/stack-1.7.1-linux-x86_64.tar.gz -O /tmp/stack.tar.gz
       - run: sudo mkdir /tmp/stack-download
       - run: sudo tar -xzf /tmp/stack.tar.gz -C /tmp/stack-download
