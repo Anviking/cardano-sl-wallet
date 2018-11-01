@@ -27,26 +27,17 @@ env:
 # Define custom set of stages
 stages:
 - snapshot
-- dependencies
 - wallet-new-specs
 - hlint
-- weeder
 
 # Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
 jobs:
   include:
   - stage: snapshot
-    if: commit_message =~ /Bump LTS/
     script:
     - mkdir -p ~/.local/bin
     - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
-    - stack --no-terminal install cpphs
-    - brew install rocksdb
-
-  - stage: dependencies
-    script:
-    - travis_wait 42 stack --no-terminal build --only-dependencies
 
   - stage: wallet-new-specs
     script:
