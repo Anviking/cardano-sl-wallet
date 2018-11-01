@@ -1,9 +1,6 @@
 # Use new container infrastructure to enable caching
 sudo: false
 
-# Use OSX to by-pass issue with CouchDB PGP Key on Linux
-os: osx
-
 # Generic language, we provide our custom builds
 language: generic
 
@@ -29,9 +26,6 @@ env:
 # Define custom set of stages
 stages:
 - snapshot
-- extra-dependencies
-- cardano-sl
-- wallet-new-specs
 
 # Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
 jobs:
@@ -40,24 +34,11 @@ jobs:
     if: commit_message =~ /Bump LTS/
     script:
     - mkdir -p ~/.local/bin
-    - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
+    - travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
     - stack --no-terminal install cpphs
-
-  - stage: extra-dependencies
-    if: commit_message =~ /Update stack.yaml/
-    script:
     - brew install rocksdb
-    - travis_wait 42 stack --no-terminal build --fast plutus-prototype cardano-report-server cardano-crypto ip cborg time-units kademlia network-transport network-transport-tcp network-transport-inmemory acid-state canonical-json clock rocksdb-haskell-ng log-warper hedgehog servant-quickcheck universum serokell-util
-
-  - stage: cardano-sl
-    if: commit_message =~ /Update stack.yaml/
-    script:
-    - brew install rocksdb
-    - travis_wait 42 stack --no-terminal build --fast cardano-sl
-
-  - stage: wallet-new-specs
-    script:
-    - brew install rocksdb
-    - stack clean
-    - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --ghc-options=-optl-Wl,-dead_strip_dylibs
+    - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --ghc-options=-optl-Wl,-dead_strip_dylibs --coverage
+    after_script:
+    - travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v0.0.4.0/shc-linux-x64-8.0.1.tar.bz2 | tar -xj
+    - ./shc test wallet-new-specs
