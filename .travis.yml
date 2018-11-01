@@ -13,7 +13,6 @@ cache:
   - $HOME/.stack
   - $HOME/.local
   - $HOME/.ghc
-  - /usr/local/Cellar
 
 # Only clone the repo's tip
 git:
@@ -26,21 +25,17 @@ env:
 
 # Define custom set of stages
 stages:
-- snapshot
 - wallet-new-specs
 - hlint
 
 # Build snapshot & dependencies in different jobs. This copes with Travis limit of 50 minutes per job.
 jobs:
   include:
-  - stage: snapshot
+  - stage: wallet-new-specs
     script:
     - mkdir -p ~/.local/bin
     - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
-
-  - stage: wallet-new-specs
-    script:
     - stack --no-terminal test --coverage
     after_script:
     - travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v0.0.4.0/shc-linux-x64-8.0.1.tar.bz2 | tar -xj
