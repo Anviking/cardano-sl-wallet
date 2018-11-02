@@ -56,7 +56,7 @@ jobs:
   - stage: wallet-new-specs
     script:
     - stack clean
-    - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --coverage
+    - travis_wait 50 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --coverage
     - stack clean
     after_script:
     # Download prebuilt binary for stack-hpc-coveralls and upload `--coverage` to coveralls.io
