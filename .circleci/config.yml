@@ -14,6 +14,7 @@ jobs:
       - run: nix-channel --add https://nixos.org/channels/nixos-unstable nixos
       - run: nix-channel --add https://nixos.org/channels/nixos-18.09
       - run: nix-channel --update
+      - run: nix-channel --list
       - run: |
           nix-env -f "<nixpkgs>" -iA haskellPackages.cpphs stack haskell.compiler.ghc822 rocksdb
       - run: stack test --coverage
