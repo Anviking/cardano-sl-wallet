@@ -11,12 +11,11 @@ jobs:
       - checkout
       - run: echo “Hello”
       - run: echo $COVERALLS_REPO_TOKEN
-      - run: nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
-      - run: nix-channel --add https://nixos.org/channels/nixos-18.09
+      - run: nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
       - run: nix-channel --update
       - run: nix-channel --list
       - run: |
-          nix-env -f "<nixpkgs>" -iA haskellPackages.cpphs stack haskell.compiler.ghc822 rocksdb
+          nix-env -f "<nixpkgs>" -iA rocksdb stack 'haskell.packages.ghc822.ghcWithPackages (self: with self; [cpphs])'
       - run: stack test --coverage
 
         # Coveralls
