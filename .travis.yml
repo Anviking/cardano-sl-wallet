@@ -27,6 +27,12 @@ env:
   - HOMEBREW_NO_AUTO_UPDATE=1             # Prevent Homebrea from spending 5 minutes upgrading itself
   - HOMEBREW_CACHE=$HOME/.local/Homebrew  # Relocate Homebrew's cache which it can actually be cached
 
+# Desactivate builds on branches but `develop` (CI is still triggered by PRs)
+branches:
+  only:
+  - master
+  - develop
+
 # Define custom set of stages
 stages:
 - snapshot
@@ -72,3 +78,12 @@ jobs:
     - travis_wait 42 stack --no-terminal test cardano-sl-wallet-new:test:wallet-new-specs --fast --coverage --ghc-options=-optl-Wl,-dead_strip_dylibs
     - shc cardano-sl-wallet-new wallet-new-specs
     - stack clean
+
+  # FIXME: Upload API doc automatically on each build against `develop` to `gh-pages`
+  # - stage: api-doc
+  #   if: branch = develop
+  #   script:
+  #   - travis_wait 42 stack --no-terminal build cardano-sl-wallet-new:exe:cardano-generate-swagger-file --fast --ghc-options=-optl-Wl,-dead_strip_dylibs
+  #   - stack exec -- cardano-generate-swagger-file --target wallet@v1
+  #   - git checkout gh-pages ...
+  #   - ... upload 'swagger.json' to gh-pages
