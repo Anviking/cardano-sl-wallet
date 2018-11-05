@@ -60,8 +60,7 @@ jobs:
     - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
     - stack --no-terminal install cpphs
-    - travis_retry wget https://gist.github.com/Anviking/323c184cbb7d16e1d9eed852dd58714c/raw/a895eb8380eaa0a6f83dd5d09f4aff2e066f46e9/shc -O $HOME/.local/bin/shc
-    - chmod +x $HOME/.local/bin/shc
+    - git clone https://github.com/rubik/stack-hpc-coveralls && cd stack-hpc-coveralls && git checkout 3d8352d5642ab214a7a574bd797880ae39595a44 && stack install
 
   # Rebuild only the extra dependencies; mainly: cardano-sl. This isn't part of the custom
   # snapshot because we likely bumps the git hash reference more often  than other dependencies.
@@ -75,7 +74,7 @@ jobs:
   # Run hlint
   - stage: hlint
     script:
-      - curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s . --cpp-define=__GLASGOW_HASKELL__=800 --cpp-define=x86_64_HOST_ARCH=1 --cpp-define=mingw32_HOST_OS=1
+      - curl -sL https://raw.github.com/ndmitchell/hlint/bea72e4e61da54ecd451590734d6e10423ead100/misc/travis.sh | sh -s . --cpp-define=__GLASGOW_HASKELL__=800 --cpp-define=x86_64_HOST_ARCH=1 --cpp-define=mingw32_HOST_OS=1
 
   # Run all tests and upload the result to coveralls.
   - stage: wallet-new-specs
