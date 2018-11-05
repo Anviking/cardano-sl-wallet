@@ -56,11 +56,12 @@ jobs:
   - stage: snapshot
     if: commit_message =~ /ci@update lts/
     script:
-    - mkdir -p ~/.local/bin
+    - mkdir -p $HOME/.local/bin
     - travis_retry curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     - travis_wait 42 stack --no-terminal --install-ghc build --only-snapshot
     - stack --no-terminal install cpphs
-    - git clone https://github.com/rubik/stack-hpc-coveralls && cd stack-hpc-coveralls && git checkout 3d8352d5642ab214a7a574bd797880ae39595a44 && stack install
+    - git clone https://github.com/rubik/stack-hpc-coveralls && cd stack-hpc-coveralls && git checkout 3d8352d5642ab214a7a574bd797880ae39595a44
+    - "echo 'resolver: lts-11.13' > stack.yaml && stack install && stack clean"
 
   # Rebuild only the extra dependencies; mainly: cardano-sl. This isn't part of the custom
   # snapshot because we likely bumps the git hash reference more often  than other dependencies.
